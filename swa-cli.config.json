@@ -2,10 +2,14 @@
   "$schema": "https://aka.ms/azure/static-web-apps-cli/schema",
   "configurations": {
     "qwik-app": {
-      "appLocation": ".",
-      "apiLocation": "./azure-functions",
-      "outputLocation": "./dist",
+      "host": "127.0.0.1",
+      "appLocation": "src",
+      "apiLocation": "azure-functions",
+      "outputLocation": "dist",
       "appBuildCommand": "npm run build",
+      "apiBuildCommand": "npm run build --if-present",
+      "run": "npm run dev",
+      "appDevserverUrl": "http://localhost:5173",
       "apiLanguage": "node",
       "apiVersion": "18"
     }

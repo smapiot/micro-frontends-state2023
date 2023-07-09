@@ -18,8 +18,7 @@
     "fmt.check": "prettier --check .",
     "lint": "eslint \"src/**/*.ts*\"",
     "preview": "qwik build preview && vite preview --open",
-    "serve": "swa start",
-    "start": "vite --open --mode ssr",
+    "start": "swa start",
     "qwik": "qwik"
   },
   "devDependencies": {
