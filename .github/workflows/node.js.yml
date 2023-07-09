@@ -1,0 +1,28 @@
+name: Publish Website
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "16.x"
+          registry-url: "https://registry.npmjs.org"
+      - name: Install Dependencies
+        run: |
+          npm i
+      - name: Build Website
+        run: |
+          npm run build
+      - name: Deploy Website
+        run: |
+          npm run deploy
+        env:
+          SWA_TOKEN: ${{ secrets.SWA_TOKEN }}
