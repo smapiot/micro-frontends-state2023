@@ -34,6 +34,6 @@
     "rewrite": "/api/render"
   },
   "platform": {
-    "apiRuntime": "node:18"
+    "apiRuntime": "node:16"
   }
 }
