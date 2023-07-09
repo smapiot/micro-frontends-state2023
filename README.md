@@ -1,12 +1,4 @@
-# Qwik City App ⚡️
-
-- [Qwik Docs](https://qwik.builder.io/)
-- [Discord](https://qwik.builder.io/chat)
-- [Qwik GitHub](https://github.com/BuilderIO/qwik)
-- [@QwikDev](https://twitter.com/QwikDev)
-- [Vite](https://vitejs.dev/)
-
----
+# State of Micro Frontends Survey 2023 ⚡️
 
 ## Project Structure
 
@@ -29,14 +21,6 @@ Inside your project, you'll see the following directory structure:
 - `src/components`: Recommended directory for components.
 
 - `public`: Any static assets, like images, can be placed in the public directory. Please see the [Vite public directory](https://vitejs.dev/guide/assets.html#the-public-directory) for more info.
-
-## Add Integrations and deployment
-
-Use the `npm run qwik add` command to add additional integrations. Some examples of integrations includes: Cloudflare, Netlify or Express Server, and the [Static Site Generator (SSG)](https://qwik.builder.io/qwikcity/guides/static-site-generation/).
-
-```shell
-npm run qwik add # or `yarn qwik add`
-```
 
 ## Development
 
@@ -62,4 +46,18 @@ The production build will generate client and server modules by running both cli
 
 ```shell
 npm run build # or `yarn build`
+```
+
+## Create your Static Web App on Azure
+
+1. Follow [this](https://learn.microsoft.com/en-us/azure/static-web-apps/overview) guide to create a Static Web App. This guide will also detail how to generate a github action or Azure Pipeline (see "Quickstarts" section)
+
+2. If you're using github actions, make sure to add skip_api_build with true value.
+
+```yml
+app_location: "/"
+api_location: "azure-functions"
+output_location: "dist"
+skip_api_build: true # <--- add this line
+###### End of Repository/Build Configurations ######
 ```

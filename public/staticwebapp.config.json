@@ -1,0 +1,39 @@
+{
+  "routes": [
+    {
+      "route": "/.auth/login/twitter",
+      "statusCode": 404
+    },
+    {
+      "route": "/.auth/login/aad",
+      "statusCode": 404
+    },
+    {
+      "route": "/login",
+      "redirect": "/.auth/login/github"
+    },
+    {
+      "route": "/logout",
+      "redirect": "/.auth/logout"
+    },
+    {
+      "route": "*",
+      "methods": ["POST", "PUT", "DELETE"],
+      "rewrite": "/api/render"
+    },
+    {
+      "route": "/",
+      "rewrite": "/api/render"
+    },
+    {
+      "route": "/index.html",
+      "rewrite": "/api/render"
+    }
+  ],
+  "navigationFallback": {
+    "rewrite": "/api/render"
+  },
+  "platform": {
+    "apiRuntime": "node:18"
+  }
+}

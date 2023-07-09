@@ -21,6 +21,7 @@ export default component$(() => {
           <br /> on me
         </h3>
         <Counter />
+        <a href="/login">Login with GitHub</a>
       </div>
 
       <div class="container container-flex">

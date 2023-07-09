@@ -1,9 +1,9 @@
 {
   "$schema": "https://json.schemastore.org/web-manifest-combined.json",
-  "name": "qwik-project-name",
-  "short_name": "Welcome to Qwik",
+  "name": "state-of-micro-frontends-2023",
+  "short_name": "MF-Survey:23",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#fff",
-  "description": "A Qwik project app."
+  "description": "Website of the State of Micro Frontends 2023 survey."
 }
