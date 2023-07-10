@@ -23,6 +23,7 @@ build({
   entryPoints: [resolve(targetDir, scriptFile)],
   format: "cjs",
   bundle: true,
+  platform: 'node',
   outfile,
 }).then(
   (result) => {

@@ -1,21 +1,17 @@
 import { component$ } from "@builder.io/qwik";
-import {
-  routeLoader$,
-  type DocumentHead,
-  type RequestHandler,
-} from "@builder.io/qwik-city";
+import { routeLoader$, type DocumentHead } from "@builder.io/qwik-city";
 
 import Counter from "~/components/starter/counter/counter";
 import Hero from "~/components/starter/hero/hero";
 import Starter from "~/components/starter/next-steps/next-steps";
 import { createTableService, TableQuery } from "azure-storage";
 
-const ts = createTableService(process.env.DB_NAME!, process.env.DB_PASS!);
-
 function getRegisteredUsers() {
   return new Promise<Array<string>>((resolve, reject) => {
     const q = new TableQuery().where("PartitionKey eq '2023'");
+    const ts = createTableService(process.env.DB_NAME!, process.env.DB_PASS!);
     ts.queryEntities("users", q, undefined!, (err, result) => {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (err) {
         reject(err);
       } else {
@@ -25,26 +21,22 @@ function getRegisteredUsers() {
   });
 }
 
-export const onRequest: RequestHandler = async ({ request, sharedMap }) => {
+export const useUser = routeLoader$(({ request }) => {
   const data = request.headers.get("x-ms-client-principal");
-  const users = await getRegisteredUsers();
 
   if (data) {
     const encoded = Buffer.from(data, "base64");
     const decoded = encoded.toString("ascii");
     const clientPrincipal = JSON.parse(decoded);
-    sharedMap.set("user", clientPrincipal.userDetails);
+    return clientPrincipal.userDetails;
   }
 
-  sharedMap.set("user-count", users.length);
-};
-
-export const useUser = routeLoader$(({ sharedMap }) => {
-  return sharedMap.get("user") as string;
+  return undefined;
 });
 
-export const useTotalUsers = routeLoader$(({ sharedMap }) => {
-  return sharedMap.get("user-count") as number;
+export const useTotalUsers = routeLoader$(async () => {
+  const users = await getRegisteredUsers();
+  return users.length;
 });
 
 export default component$(() => {
