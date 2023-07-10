@@ -1,12 +1,33 @@
 import { component$ } from "@builder.io/qwik";
-import type { DocumentHead } from "@builder.io/qwik-city";
+import {
+  routeLoader$,
+  type DocumentHead,
+  type RequestHandler,
+} from "@builder.io/qwik-city";
 
 import Counter from "~/components/starter/counter/counter";
 import Hero from "~/components/starter/hero/hero";
 import Infobox from "~/components/starter/infobox/infobox";
 import Starter from "~/components/starter/next-steps/next-steps";
 
+export const onRequest: RequestHandler = async ({ request, sharedMap }) => {
+  const data = request.headers.get("x-ms-client-principal");
+
+  if (data) {
+    const encoded = Buffer.from(data, "base64");
+    const decoded = encoded.toString("ascii");
+    const clientPrincipal = JSON.parse(decoded);
+    sharedMap.set("user", clientPrincipal.userDetails);
+  }
+};
+
+export const useUser = routeLoader$(({ sharedMap }) => {
+  return sharedMap.get("user") as string;
+});
+
 export default component$(() => {
+  const user = useUser();
+
   return (
     <>
       <Hero />
@@ -21,7 +42,13 @@ export default component$(() => {
           <br /> on me
         </h3>
         <Counter />
-        <a href="/login">Login with GitHub</a>
+        <p>
+          {user.value ? (
+            <b>{user.value}</b>
+          ) : (
+            <a href="/login">Login with GitHub</a>
+          )}
+        </p>
       </div>
 
       <div class="container container-flex">
