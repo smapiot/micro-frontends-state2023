@@ -1,14 +1,15 @@
 const { build } = require("esbuild");
 const { resolve } = require("path");
-const { rmSync, readdirSync, renameSync } = require("fs");
+const { rmSync, readdirSync, writeFileSync } = require("fs");
 
 const fnFn = "function.json";
 const targetFn = "render.js";
 
 const targetDir = resolve(__dirname, "../azure-functions/render");
 const fnJson = resolve(targetDir, fnFn);
-const { scriptFile } = require(fnJson);
+const fnContent = require(fnJson);
 const allowedFiles = ['build', fnFn, targetFn];
+const scriptFile = fnContent.scriptFile;
 
 build({
   entryPoints: [resolve(targetDir, scriptFile)],
@@ -34,7 +35,9 @@ build({
       }
     }
 
-    renameSync(resolve(targetDir, targetFn), resolve(targetDir, scriptFile));
+    fnContent.scriptFile = targetFn;
+    fnContent.entryPoint = 'default';
+    writeFileSync(fnJson, JSON.stringify(fnContent, undefined, 2), 'utf8');
   },
   (err) => {
     console.error("Something bad happened", err);
