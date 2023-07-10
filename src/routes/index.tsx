@@ -8,9 +8,26 @@ import {
 import Counter from "~/components/starter/counter/counter";
 import Hero from "~/components/starter/hero/hero";
 import Starter from "~/components/starter/next-steps/next-steps";
+import { createTableService, TableQuery } from "azure-storage";
+
+const ts = createTableService(process.env.DB_NAME!, process.env.DB_PASS!);
+
+function getRegisteredUsers() {
+  return new Promise<Array<string>>((resolve, reject) => {
+    const q = new TableQuery().where("PartitionKey eq '2023'");
+    ts.queryEntities("users", q, undefined!, (err, result) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result.entries.map((e: any) => e.rowKey));
+      }
+    });
+  });
+}
 
 export const onRequest: RequestHandler = async ({ request, sharedMap }) => {
   const data = request.headers.get("x-ms-client-principal");
+  const users = await getRegisteredUsers();
 
   if (data) {
     const encoded = Buffer.from(data, "base64");
@@ -18,14 +35,21 @@ export const onRequest: RequestHandler = async ({ request, sharedMap }) => {
     const clientPrincipal = JSON.parse(decoded);
     sharedMap.set("user", clientPrincipal.userDetails);
   }
+
+  sharedMap.set("user-count", users.length);
 };
 
 export const useUser = routeLoader$(({ sharedMap }) => {
   return sharedMap.get("user") as string;
 });
 
+export const useTotalUsers = routeLoader$(({ sharedMap }) => {
+  return sharedMap.get("user-count") as number;
+});
+
 export default component$(() => {
   const user = useUser();
+  const total = useTotalUsers();
 
   return (
     <>
@@ -47,6 +71,9 @@ export default component$(() => {
           ) : (
             <a href="/login">Login with GitHub</a>
           )}
+        </p>
+        <p>
+          Right now <b>{total} users</b> registered.
         </p>
       </div>
     </>
