@@ -3,13 +3,14 @@ const { resolve } = require("path");
 const { rmSync, readdirSync, readFileSync, writeFileSync } = require("fs");
 
 const fnFn = "function.json";
+const buildDir = "build";
 const targetFn = "render.js";
 
 const targetDir = resolve(__dirname, "../azure-functions/render");
 const fnJson = resolve(targetDir, fnFn);
 const outfile = resolve(targetDir, targetFn);
 const fnContent = require(fnJson);
-const allowedFiles = ["build", fnFn, targetFn];
+const allowedFiles = [fnFn, targetFn];
 const scriptFile = fnContent.scriptFile;
 
 function replace(original, replacement) {
@@ -37,8 +38,15 @@ build({
     const files = readdirSync(targetDir);
 
     for (const file of files) {
-      if (!allowedFiles.includes(file)) {
-        rmSync(resolve(targetDir, file));
+      if (buildDir === file) {
+        rmSync(resolve(targetDir, buildDir), {
+          recursive: true,
+          force: true,
+        });
+      } else if (!allowedFiles.includes(file)) {
+        rmSync(resolve(targetDir, file), {
+          force: true,
+        });
       }
     }
 
