@@ -9,7 +9,7 @@
     "build": "qwik build",
     "build.client": "vite build",
     "build.preview": "vite build --ssr src/entry.preview.tsx",
-    "build.server": "vite build -c adapters/azure-swa/vite.config.ts",
+    "build.server": "vite build -c adapters/azure-swa/vite.config.ts && node adapters/swa-transform.js",
     "build.types": "tsc --incremental --noEmit",
     "deploy": "swa deploy ./dist --api-location ./azure-functions --api-language node --api-version 16 --env production --deployment-token $SWA_TOKEN",
     "dev": "vite --mode ssr",

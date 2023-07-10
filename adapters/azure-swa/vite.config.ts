@@ -2,6 +2,8 @@ import { azureSwaAdapter } from "@builder.io/qwik-city/adapters/azure-swa/vite";
 import { extendConfig } from "@builder.io/qwik-city/vite";
 import baseConfig from "../../vite.config";
 
+process.env.ORIGIN = "https://state-2023.microfrontends.cloud";
+
 export default extendConfig(baseConfig, () => {
   return {
     build: {
@@ -10,8 +12,8 @@ export default extendConfig(baseConfig, () => {
       rollupOptions: {
         input: ["src/entry.azure-swa.tsx", "@qwik-city-plan"],
         output: {
-          entryFileNames: `[name].[hash].mjs`,
-          chunkFileNames: `[name].[hash].mjs`,
+          entryFileNames: `[name].[hash].js`,
+          chunkFileNames: `[name].[hash].js`,
         },
       },
     },
