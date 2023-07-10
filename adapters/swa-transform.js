@@ -7,15 +7,15 @@ const targetFn = "render.js";
 
 const targetDir = resolve(__dirname, "../azure-functions/render");
 const fnJson = resolve(targetDir, fnFn);
-const outFile = resolve(targetDir, targetFn);
+const outfile = resolve(targetDir, targetFn);
 const fnContent = require(fnJson);
 const allowedFiles = ["build", fnFn, targetFn];
 const scriptFile = fnContent.scriptFile;
 
 function replace(original, replacement) {
-  const content = readFileSync(outFile, "utf8");
+  const content = readFileSync(outfile, "utf8");
   const updated = content.replace(original, replacement);
-  writeFileSync(outFile, updated, "utf8");
+  writeFileSync(outfile, updated, "utf8");
 }
 
 build({
