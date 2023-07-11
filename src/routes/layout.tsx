@@ -1,31 +1,46 @@
 import { component$, Slot, useStyles$ } from "@builder.io/qwik";
-import { routeLoader$ } from "@builder.io/qwik-city";
-import type { RequestHandler } from "@builder.io/qwik-city";
+import { type RequestHandler, type DocumentHead, routeLoader$ } from "@builder.io/qwik-city";
 
-import Header from "~/components/starter/header/header";
-import Footer from "~/components/starter/footer/footer";
+import Header from "~/components/header/header";
+import Footer from "~/components/footer/footer";
 
 import styles from "./styles.css?inline";
 
+export const useUser = routeLoader$(({ request }) => {
+  const data = request.headers.get("x-ms-client-principal");
+
+  if (data) {
+    const encoded = Buffer.from(data, "base64");
+    const decoded = encoded.toString("ascii");
+    const clientPrincipal = JSON.parse(decoded);
+    return clientPrincipal.userDetails;
+  }
+
+  return undefined;
+});
+
+export const head: DocumentHead = {
+  title: "State of Micro Frontends 2023",
+  meta: [
+    {
+      name: "description",
+      content: "The survey to obtain the state of Micro Frontends 2023.",
+    },
+  ],
+};
+
 export const onGet: RequestHandler = async ({ cacheControl }) => {
-  // Control caching for this request for best performance and to reduce hosting costs:
-  // https://qwik.builder.io/docs/caching/
   cacheControl({
-    // Always serve a cached response by default, up to a week stale
-    staleWhileRevalidate: 60 * 60 * 24 * 7,
-    // Max once every 5 seconds, revalidate on the server to get a fresh version of this page
-    maxAge: 5,
+    public: false,
+    maxAge: 0,
+    sMaxAge: 0,
+    staleWhileRevalidate: 0,
   });
 };
 
-export const useServerTimeLoader = routeLoader$(() => {
-  return {
-    date: new Date().toISOString(),
-  };
-});
-
 export default component$(() => {
   useStyles$(styles);
+
   return (
     <>
       <Header />

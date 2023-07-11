@@ -120,6 +120,13 @@ button {
   text-align: center;
 }
 
+.button--icon {
+  display: inline-flex;
+  gap: 0.8rem;
+  justify-content: center;
+  align-items: center;
+}
+
 a.button.button-dark,
 button.button-dark {
   background: var(--qwik-dirty-black);

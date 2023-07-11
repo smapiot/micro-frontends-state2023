@@ -1,0 +1,12 @@
+.heading {
+  font-size: 1.5rem;
+  margin-top: 4rem;
+  margin-bottom: 2rem;
+}
+
+.paragraph {
+  line-height: 1.6;
+  text-align: left;
+  max-width: 800px;
+  margin: auto;
+}

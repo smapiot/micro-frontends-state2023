@@ -28,9 +28,14 @@
 
 .header li a {
   color: white;
-  display: inline-block;
+  display: inline-flex;
   padding: 0;
   text-decoration: none;
+  gap: 0.5rem;
+}
+
+.header li a img {
+  border-radius: 50%;
 }
 
 .header li a:hover {
