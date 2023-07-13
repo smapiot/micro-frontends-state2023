@@ -9,7 +9,7 @@ export default component$(() => {
         <span>Made with ❤️ by smapiot</span>
         <span class={styles.spacer}>|</span>
         <Link href="/imprint">Imprint</Link>
-        <span class={styles.spacer}>|</span>
+        <span class={[styles.spacer, styles.sep]}>|</span>
         <Link href="/disclaimer">Disclaimer</Link>
       </div>
     </footer>

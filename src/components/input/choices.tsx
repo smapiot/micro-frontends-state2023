@@ -1,13 +1,24 @@
-import { type Component, component$ } from "@builder.io/qwik";
+import { type Component, component$, useSignal } from "@builder.io/qwik";
 
 import { type ChoicesQuestion } from "~/data";
 
-function shuffle() {
-  return Math.random() - 0.5;
+function shuffle(entries: Array<string>, skipLast: boolean) {
+  const last = entries.length - 1;
+  return entries.map((_, i) => i).sort((a, b) => {
+    if (skipLast) {
+      if (a === last) {
+        return 1;
+      } else if (b === last) {
+        return -1;
+      }
+    }
+    
+    return Math.random() - 0.5;
+  });
 }
 
-function normal(a: number, b: number) {
-  return a - b;
+function normal(entries: Array<string>) {
+  return entries.map((_, i) => i);
 }
 
 const Choices: Component<{
@@ -15,10 +26,15 @@ const Choices: Component<{
   answer: string | undefined;
 }> = component$(({ question, answer }) => {
   const type = question.max === 1 ? "radio" : "checkbox";
+  const extender = question.extendOn;
+  const canExtend = extender !== undefined;
   const sorter = type === "checkbox" ? shuffle : normal;
-  const optionMap = question.options.map((_, i) => i).sort(sorter);
+  const optionMap = useSignal(() =>
+    sorter(question.options, canExtend)
+  );
   const answers = JSON.parse(answer || "[]") as Array<string>;
-  const options = optionMap.map((i) => question.options[i]);
+  const options = optionMap.value.map((i) => question.options[i]);
+  const showExtend = useSignal(canExtend && answers.includes(extender));
 
   return (
     <div class="survey-choices-container">
@@ -29,12 +45,25 @@ const Choices: Component<{
               type={type}
               name="answer[]"
               value={option}
+              onChange$={(ev) => {
+                if (ev.target.value === extender) {
+                  showExtend.value = ev.target.checked;
+                }
+              }}
               checked={answers.includes(option)}
             />
             <span>{option}</span>
           </label>
         ))}
       </div>
+      {showExtend.value && (
+        <div class="survey-text">
+          <input
+            name="answer[]"
+            value={answers.find((m) => !options.includes(m))}
+          />
+        </div>
+      )}
     </div>
   );
 });

@@ -20,7 +20,7 @@ import { getUser, isLoggedIn } from "~/helpers";
 const questionIds: any = questions.map((q) => q.id);
 
 export const useStoreAnswerAction = routeAction$(
-  async ({ question, answer }, { request, redirect }) => {
+  async ({ question, answer, previous }, { request, redirect }) => {
     const qIndex = questions.findIndex((m) => m.id === question);
 
     if (qIndex === -1) {
@@ -34,7 +34,7 @@ export const useStoreAnswerAction = routeAction$(
     const next = questions[qIndex + 1]?.id;
 
     switch (q.type) {
-      case "choices":
+      case "choices": {
         const as = Array.isArray(answer) ? answer : [];
 
         if (as.length < q.min || as.length > q.max) {
@@ -43,15 +43,21 @@ export const useStoreAnswerAction = routeAction$(
           };
         }
 
-        if (as.some((m) => !q.options.includes(m))) {
+        if (q.extendOn === undefined && as.some((m) => !q.options.includes(m))) {
           return {
             success: false,
           };
         }
 
-        await setQuestionResponse(user, question, JSON.stringify(as));
+        const current = JSON.stringify(as);
+
+        if (current !== previous) {
+          await setQuestionResponse(user, question, current);
+        }
+
         break;
-      case "linear":
+      }
+      case "linear": {
         const a = +(answer ?? "0");
 
         if (isNaN(a) || a < q.min || a > q.max) {
@@ -60,11 +66,17 @@ export const useStoreAnswerAction = routeAction$(
           };
         }
 
-        await setQuestionResponse(user, question, `${~~a}`);
+        const current = `${~~a}`;
+
+        if (current !== previous) {
+          await setQuestionResponse(user, question, current);
+        }
+
         break;
-      case "text":
-        const txt = answer ?? "";
-        const l = txt.length;
+      }
+      case "text": {
+        const current = answer ?? "";
+        const l = current.length;
 
         if (l > q.maxLength || l < q.minLength) {
           return {
@@ -72,8 +84,12 @@ export const useStoreAnswerAction = routeAction$(
           };
         }
 
-        await setQuestionResponse(user, question, txt);
+        if (current !== previous) {
+          await setQuestionResponse(user, question, current);
+        }
+
         break;
+      }
     }
 
     throw redirect(308, next ? `/survey/${next}` : "/closing");
@@ -81,6 +97,7 @@ export const useStoreAnswerAction = routeAction$(
   zod$({
     question: z.enum(questionIds),
     answer: z.any(),
+    previous: z.any(),
   })
 );
 
@@ -94,12 +111,9 @@ export const useAnswer = routeLoader$(async ({ request, params }) => {
   const { id } = params;
   const question = questions.find((m) => m.id === id);
 
-  console.log("Rout loader", id, question);
-
   if (question) {
     const user = getUser(request);
     const answer = await getQuestionResponse(user, question.id);
-    console.log("Rout loader answer", answer);
     return answer;
   }
 
@@ -142,14 +156,15 @@ export default component$(() => {
       <div role="presentation" class="ellipsis"></div>
       <Form action={action} spaReset>
         <input type="hidden" name="question" value={question.id} />
+        <input type="hidden" name="previous" value={answer.value} />
 
         <div class="container container-center">
           {question.type === "text" ? (
-            <Text question={question} answer={answer.value} />
+            <Text question={question} answer={answer.value} key={question.id} />
           ) : question.type === "linear" ? (
-            <Linear question={question} answer={answer.value} />
+            <Linear question={question} answer={answer.value} key={question.id} />
           ) : (
-            <Choices question={question} answer={answer.value} />
+            <Choices question={question} answer={answer.value} key={question.id} />
           )}
         </div>
 

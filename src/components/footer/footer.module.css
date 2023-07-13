@@ -9,11 +9,16 @@
 
 .anchor span:not(.spacer) {
   display: block;
+  padding: 0.5rem;
 }
 
 .spacer {
   display: none;
   padding: 0 15px;
+}
+
+.sep {
+  display: inline;
 }
 
 @media screen and (min-width: 768px) {
