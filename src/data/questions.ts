@@ -226,6 +226,7 @@ const techQuestions: Array<Question> = [
       "solid-start",
       "QwikCity",
       "Astro",
+      "Modern.js",
       "Other",
     ],
     section: "tech",
