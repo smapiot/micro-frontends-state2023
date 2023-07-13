@@ -7,7 +7,6 @@ import {
   z,
   zod$,
   Link,
-  useNavigate,
   routeLoader$,
 } from "@builder.io/qwik-city";
 
@@ -21,15 +20,18 @@ import { getUser, isLoggedIn } from "~/helpers";
 const questionIds: any = questions.map((q) => q.id);
 
 export const useStoreAnswerAction = routeAction$(
-  async ({ question, answer }, { request }) => {
-    const q = questions.find((m) => m.id === question);
-    const user = getUser(request);
+  async ({ question, answer }, { request, redirect }) => {
+    const qIndex = questions.findIndex((m) => m.id === question);
 
-    if (!q) {
+    if (qIndex === -1) {
       return {
         success: false,
       };
     }
+
+    const user = getUser(request);
+    const q = questions[qIndex];
+    const next = questions[qIndex + 1]?.id;
 
     switch (q.type) {
       case "choices":
@@ -74,9 +76,7 @@ export const useStoreAnswerAction = routeAction$(
         break;
     }
 
-    return {
-      success: true,
-    };
+    throw redirect(308, next ? `/survey/${next}` : "/closing");
   },
   zod$({
     question: z.enum(questionIds),
@@ -94,9 +94,12 @@ export const useAnswer = routeLoader$(async ({ request, params }) => {
   const { id } = params;
   const question = questions.find((m) => m.id === id);
 
+  console.log("Rout loader", id, question);
+
   if (question) {
     const user = getUser(request);
     const answer = await getQuestionResponse(user, question.id);
+    console.log("Rout loader answer", answer);
     return answer;
   }
 
@@ -107,7 +110,6 @@ export default component$(() => {
   const { id } = useLocation().params;
   const answer = useAnswer();
   const action = useStoreAnswerAction();
-  const navigate = useNavigate();
   const index = questions.findIndex((m) => m.id === id);
 
   if (index === -1) {
@@ -138,19 +140,7 @@ export default component$(() => {
       </div>
 
       <div role="presentation" class="ellipsis"></div>
-      <Form
-        action={action}
-        spaReset
-        onSubmitCompleted$={({ detail }) => {
-          if (detail.value.success) {
-            if (next) {
-              navigate(`/survey/${next.id}`);
-            } else {
-              navigate(`/closing`);
-            }
-          }
-        }}
-      >
+      <Form action={action} spaReset>
         <input type="hidden" name="question" value={question.id} />
 
         <div class="container container-center">
