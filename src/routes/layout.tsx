@@ -1,22 +1,18 @@
 import { component$, Slot, useStyles$ } from "@builder.io/qwik";
-import { type RequestHandler, type DocumentHead, routeLoader$ } from "@builder.io/qwik-city";
+import {
+  type RequestHandler,
+  type DocumentHead,
+  routeLoader$,
+} from "@builder.io/qwik-city";
 
 import Header from "~/components/header/header";
 import Footer from "~/components/footer/footer";
 
 import styles from "./styles.css?inline";
+import { getUser } from "~/helpers";
 
 export const useUser = routeLoader$(({ request }) => {
-  const data = request.headers.get("x-ms-client-principal");
-
-  if (data) {
-    const encoded = Buffer.from(data, "base64");
-    const decoded = encoded.toString("ascii");
-    const clientPrincipal = JSON.parse(decoded);
-    return clientPrincipal.userDetails;
-  }
-
-  return undefined;
+  return getUser(request);
 });
 
 export const head: DocumentHead = {

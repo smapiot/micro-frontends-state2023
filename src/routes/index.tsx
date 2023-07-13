@@ -12,7 +12,6 @@ export const useTotalUsers = routeLoader$(async () => {
 
 export default component$(() => {
   const user = useUser();
-  const total = useTotalUsers();
 
   return (
     <>
@@ -40,7 +39,14 @@ export default component$(() => {
       </div>
 
       <div class="container container-center">
-        Right now <b>{total} users</b> registered.
+        ✨ Curious about the past? Look at the{" "}
+        <a
+          href="https://dev.to/florianrappl/how-micro-frontends-are-being-implemented-in-2020-a-survey-2l0b"
+          target="_blank"
+        >
+          results of the 2020 survey
+        </a>
+        .
       </div>
     </>
   );

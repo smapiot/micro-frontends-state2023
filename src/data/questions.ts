@@ -1,8 +1,38 @@
-const basicsQuestions = [
+export interface BasicQuestion {
+  id: string;
+  question: string;
+  section: string;
+}
+
+export interface LinearQuestion extends BasicQuestion {
+  type: "linear";
+  min: number;
+  max: number;
+  minLabel: string;
+  maxLabel: string;
+}
+
+export interface TextQuestion extends BasicQuestion {
+  type: "text";
+  hint: string;
+  minLength: number;
+  maxLength: number;
+}
+
+export interface ChoicesQuestion extends BasicQuestion {
+  type: "choices";
+  min: number;
+  max: number;
+  options: Array<string>;
+}
+
+export type Question = LinearQuestion | TextQuestion | ChoicesQuestion;
+
+const basicsQuestions: Array<Question> = [
   {
-    id: "q0000",
+    id: "q0000-knowledge" as const,
     question: "How would you rate your knowledge regarding micro frontends?",
-    type: "linear",
+    type: "linear" as const,
     min: 1,
     minLabel: "Beginner",
     max: 5,
@@ -10,17 +40,19 @@ const basicsQuestions = [
     section: "basics",
   },
   {
-    id: "q0010",
+    id: "q0010-frameworks" as const,
     question:
       "What frameworks, libraries, or patterns for micro frontends do you know?",
     hint: "List as many as you want. Separate by comma.",
-    type: "text",
+    type: "text" as const,
     section: "basics",
+    minLength: 0,
+    maxLength: 1024,
   },
   {
-    id: "q0020",
+    id: "q0020-articles" as const,
     question: "How often do you read articles about micro frontends?",
-    type: "choices",
+    type: "choices" as const,
     min: 1,
     max: 1,
     options: ["Never", "Yearly", "Monthly", "Weekly", "Daily"],
@@ -28,38 +60,42 @@ const basicsQuestions = [
   },
 ];
 
-const experienceQuestions = [
+const experienceQuestions: Array<Question> = [
   {
-    id: "q0100",
+    id: "q0100-solutions" as const,
     question: "How would you rate the currently available solutions?",
-    type: "linear",
+    type: "linear" as const,
     min: 1,
-    minLabel: "Beginner",
+    minLabel: "Poor",
     max: 5,
-    maxLabel: "Expert",
+    maxLabel: "Great",
     section: "experience",
   },
   {
-    id: "q0110",
+    id: "q0110-advantage" as const,
     question: "What advantage do you like the most?",
     hint: "Give as much detail as you can based on what you've seen so far.",
-    type: "text",
+    type: "text" as const,
     section: "experience",
+    minLength: 0,
+    maxLength: 2048,
   },
   {
-    id: "q0120",
+    id: "q0120-disadvantages" as const,
     question: "What disadvantage(s) are you seeing?",
     hint: "Don't hold back. We can take it!",
-    type: "text",
+    type: "text" as const,
     section: "experience",
+    minLength: 0,
+    maxLength: 2048,
   },
 ];
 
-const ecosystemQuestions = [
+const ecosystemQuestions: Array<Question> = [
   {
-    id: "q0200",
+    id: "q0200-mfframeworks" as const,
     question: "Which of the following micro frontend frameworks do you know?",
-    type: "choices",
+    type: "choices" as const,
     min: 0,
     max: 13,
     options: [
@@ -80,54 +116,50 @@ const ecosystemQuestions = [
     section: "ecosystem",
   },
   {
-    id: "q0210",
+    id: "q0210-frameworkuser" as const,
     question: "Have you used a micro frontend framework yet?",
-    type: "choices",
+    type: "choices" as const,
     min: 1,
     max: 1,
     options: ["Yes, one of the previous list", "Yes, a different one", "No"],
     section: "ecosystem",
   },
   {
-    id: "q0220",
+    id: "q0220-mftools" as const,
     question: "Which of the following tools for micro frontends do you know?",
-    type: "choices",
+    type: "choices" as const,
     min: 1,
     max: 3,
     options: ["Module Federation", "Native Federation", "SystemJS"],
     section: "ecosystem",
   },
   {
-    id: "q0230",
+    id: "q0230-tooluser" as const,
     question: "Have you used a micro frontend tool yet?",
-    type: "choices",
+    type: "choices" as const,
     min: 1,
     max: 1,
     options: ["Yes, one of the previous list", "Yes, a different one", "No"],
     section: "ecosystem",
   },
   {
-    id: "q0240",
-    question: "Have you used a micro frontend tool yet?",
-    type: "choices",
-    min: 1,
-    max: 1,
-    options: ["Yes, one of the previous list", "Yes, a different one", "No"],
-    section: "ecosystem",
-  },
-  {
-    id: "q0250",
+    id: "q0240-mfdiscovery" as const,
     question: "What micro frontend discovery services do you know?",
-    type: "choices",
+    type: "choices" as const,
     min: 0,
     max: 4,
-    options: ["Piral Feed Service", "OpenComponents Registry", "AWS Frontend Service Discovery", "Module Federation Medusa"],
+    options: [
+      "Piral Feed Service",
+      "OpenComponents Registry",
+      "AWS Frontend Service Discovery",
+      "Module Federation Medusa",
+    ],
     section: "ecosystem",
   },
   {
-    id: "q0260",
+    id: "q0250-discoveryuser" as const,
     question: "Are you using a micro frontend discovery service?",
-    type: "choices",
+    type: "choices" as const,
     min: 1,
     max: 1,
     options: ["Yes, one of the previous list", "Yes, a different one", "No"],
@@ -135,20 +167,20 @@ const ecosystemQuestions = [
   },
 ];
 
-const techQuestions = [
+const techQuestions: Array<Question> = [
   {
-    id: "q0300",
+    id: "q0300-target" as const,
     question: "For what target have you been developing micro frontends?",
-    type: "choices",
+    type: "choices" as const,
     min: 1,
     max: 4,
     options: ["Web", "Mobile", "Desktop", "Other"],
     section: "tech",
   },
   {
-    id: "q0310",
+    id: "q0310-approach" as const,
     question: "Which of the following approaches do you prefer?",
-    type: "choices",
+    type: "choices" as const,
     min: 1,
     max: 1,
     options: [
@@ -159,10 +191,10 @@ const techQuestions = [
     section: "tech",
   },
   {
-    id: "q0320",
+    id: "q0320-technology" as const,
     question:
       "If using a single technology makes sense, which one(s) would you prefer?",
-    type: "choices",
+    type: "choices" as const,
     min: 1,
     max: 4,
     options: [
@@ -180,9 +212,9 @@ const techQuestions = [
     section: "tech",
   },
   {
-    id: "q0330",
+    id: "q0330-metaframework" as const,
     question: "Which meta framework would you prefer?",
-    type: "choices",
+    type: "choices" as const,
     min: 1,
     max: 4,
     options: [
@@ -200,11 +232,11 @@ const techQuestions = [
   },
 ];
 
-const backgroundQuestions = [
+const backgroundQuestions: Array<Question> = [
   {
-    id: "q0400",
+    id: "q0400-employees" as const,
     question: "How many employees are at the company?",
-    type: "choices",
+    type: "choices" as const,
     min: 1,
     max: 1,
     options: [
@@ -217,9 +249,9 @@ const backgroundQuestions = [
     section: "background",
   },
   {
-    id: "q0410",
+    id: "q0410-developers" as const,
     question: "How many (frontend) developers are in the project?",
-    type: "choices",
+    type: "choices" as const,
     min: 1,
     max: 1,
     options: [
@@ -233,9 +265,9 @@ const backgroundQuestions = [
     section: "background",
   },
   {
-    id: "q0420",
+    id: "q0420-team" as const,
     question: "How many people work on your / a single micro frontend?",
-    type: "choices",
+    type: "choices" as const,
     min: 1,
     max: 1,
     options: [
@@ -249,19 +281,19 @@ const backgroundQuestions = [
     section: "background",
   },
   {
-    id: "q0430",
+    id: "q0430-framework" as const,
     question:
       "Is there a single technology framework (e.g., React) or multiple?",
-    type: "choices",
+    type: "choices" as const,
     min: 1,
     max: 1,
     options: ["Single", "Multiple", "Not sure yet"],
     section: "background",
   },
   {
-    id: "q0440",
+    id: "q0440-year" as const,
     question: "Which year did you start using micro frontends in your company?",
-    type: "choices",
+    type: "choices" as const,
     min: 1,
     max: 1,
     options: ["2023", "2022", "2021", "2020", "2019", "2018 or earlier"],

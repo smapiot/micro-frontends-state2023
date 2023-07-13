@@ -1,0 +1,23 @@
+.paragraph {
+  line-height: 1.6;
+  max-width: 700px;
+  margin: auto;
+}
+
+.paragraph + .paragraph {
+  margin-top: 1rem;
+}
+
+.list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.listItem {
+  padding: 0;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
