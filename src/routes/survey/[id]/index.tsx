@@ -1,4 +1,4 @@
-import { type Component, component$ } from "@builder.io/qwik";
+import { component$ } from "@builder.io/qwik";
 import {
   Form,
   type RequestHandler,
@@ -11,12 +11,10 @@ import {
   routeLoader$,
 } from "@builder.io/qwik-city";
 
-import {
-  type ChoicesQuestion,
-  type LinearQuestion,
-  type TextQuestion,
-  questions,
-} from "~/data";
+import Choices from "~/components/input/choices";
+import Linear from "~/components/input/linear";
+import Text from "~/components/input/text";
+import { questions } from "~/data";
 import { getQuestionResponse, setQuestionResponse } from "~/db";
 import { getUser, isLoggedIn } from "~/helpers";
 
@@ -103,79 +101,6 @@ export const useAnswer = routeLoader$(async ({ request, params }) => {
   }
 
   return undefined;
-});
-
-const Text: Component<{ question: TextQuestion; answer: string | undefined }> =
-  component$(({ question, answer }) => {
-    return (
-      <div class="survey-text">
-        <textarea
-          name="answer"
-          value={answer}
-          placeholder={question.hint}
-          minLength={question.minLength}
-          maxLength={question.maxLength}
-        />
-      </div>
-    );
-  });
-
-const Linear: Component<{
-  question: LinearQuestion;
-  answer: string | undefined;
-}> = component$(({ question, answer }) => {
-  return (
-    <div
-      class="survey-linear"
-      data-min-label={question.minLabel}
-      data-max-label={question.maxLabel}
-    >
-      <input
-        type="range"
-        name="answer"
-        min={question.min}
-        max={question.max}
-        value={answer}
-      />
-    </div>
-  );
-});
-
-function shuffle() {
-  return Math.random() - 0.5;
-}
-
-function normal(a: number, b: number) {
-  return a - b;
-}
-
-const Choices: Component<{
-  question: ChoicesQuestion;
-  answer: string | undefined;
-}> = component$(({ question, answer }) => {
-  const type = question.max === 1 ? "radio" : "checkbox";
-  const sorter = type === "checkbox" ? shuffle : normal;
-  const optionMap = question.options.map((_, i) => i).sort(sorter);
-  const answers = JSON.parse(answer || "[]") as Array<string>;
-  const options = optionMap.map((i) => question.options[i]);
-
-  return (
-    <div class="survey-choices-container">
-      <div class="survey-choices">
-        {options.map((option) => (
-          <label key={option}>
-            <input
-              type={type}
-              name="answer[]"
-              value={option}
-              checked={answers.includes(option)}
-            />
-            <span>{option}</span>
-          </label>
-        ))}
-      </div>
-    </div>
-  );
 });
 
 export default component$(() => {

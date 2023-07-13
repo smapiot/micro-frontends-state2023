@@ -7,9 +7,9 @@ import {
 
 import Header from "~/components/header/header";
 import Footer from "~/components/footer/footer";
+import { getUser } from "~/helpers";
 
 import styles from "./styles.css?inline";
-import { getUser } from "~/helpers";
 
 export const useUser = routeLoader$(({ request }) => {
   return getUser(request);
