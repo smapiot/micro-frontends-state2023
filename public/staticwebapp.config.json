@@ -34,6 +34,17 @@
   "navigationFallback": {
     "rewrite": "/api/render"
   },
+  "auth": {
+    "identityProviders": {
+      "github": {
+        "enabled": true,
+        "registration": {
+          "clientIdSettingName": "GITHUB_CLIENT_ID",
+          "clientSecretSettingName": "GITHUB_CLIENT_SECRET"
+        }
+      }
+    }
+  },
   "responseOverrides": {
     "401": {
       "redirect": "/.auth/login/github?post_login_redirect_uri=.referrer",
