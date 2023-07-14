@@ -129,7 +129,7 @@ const ecosystemQuestions: Array<Question> = [
     id: "q0220-mftools",
     question: "Which of the following tools for micro frontends do you know?",
     type: "choices",
-    min: 1,
+    min: 0,
     max: 3,
     options: ["Module Federation", "Native Federation", "SystemJS"],
     section: "ecosystem",
@@ -173,7 +173,7 @@ const techQuestions: Array<Question> = [
     id: "q0300-target",
     question: "For what target have you been developing micro frontends?",
     type: "choices",
-    min: 1,
+    min: 0,
     max: 4,
     options: ["Web", "Mobile", "Desktop", "Other"],
     extendOn: "Other",
@@ -197,7 +197,7 @@ const techQuestions: Array<Question> = [
     question:
       "If using a single technology makes sense, which one(s) would you prefer?",
     type: "choices",
-    min: 1,
+    min: 0,
     max: 4,
     options: [
       "React",
@@ -218,7 +218,7 @@ const techQuestions: Array<Question> = [
     id: "q0330-metaframework",
     question: "Which meta framework would you prefer?",
     type: "choices",
-    min: 1,
+    min: 0,
     max: 4,
     options: [
       "Next",
