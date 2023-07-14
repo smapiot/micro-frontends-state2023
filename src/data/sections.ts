@@ -20,6 +20,11 @@ export const sections = [
     description: "We'd love to know more about your approach.",
   },
   {
+    id: "arch",
+    title: "Architecture",
+    description: "How you tackled the whole micro frontends approach.",
+  },
+  {
     id: "background",
     title: "Background",
     description:

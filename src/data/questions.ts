@@ -237,6 +237,77 @@ const techQuestions: Array<Question> = [
   },
 ];
 
+const archQuestions: Array<Question> = [
+  {
+    id: "q0500-driver",
+    question:
+      "What was the main driver for choosing the micro frontend pattern for your project?",
+    type: "choices",
+    min: 0,
+    max: 5,
+    options: [
+      "Flexibility for the frontend solution",
+      "Possibility of distributed development",
+      "Existing skillset and experience in the development team",
+      "Popular frontend architecture pattern",
+      "Other",
+    ],
+    extendOn: "Other",
+    section: "arch",
+  },
+  {
+    id: "q0510-assessment",
+    question:
+      "Did you perform an architecture assessment, whether the micro frontend pattern is an appropriate choice for your project?",
+    type: "choices",
+    min: 1,
+    max: 1,
+    options: ["Yes", "No", "N/A"],
+    section: "arch",
+  },
+  {
+    id: "q0520-landscape",
+    question:
+      "Did you create a high level landscape of planned micro frontends prior to starting implementation?",
+    type: "choices",
+    min: 1,
+    max: 1,
+    options: ["Yes", "No", "N/A"],
+    section: "arch",
+  },
+  {
+    id: "q0530-scope",
+    question:
+      "How do you decide on the scope and separation of micro frontends?",
+    type: "choices",
+    min: 0,
+    max: 4,
+    options: [
+      "Based on layout",
+      "Based on functional context",
+      "Based on technical context",
+      "Other",
+    ],
+    extendOn: "Other",
+    section: "arch",
+  },
+  {
+    id: "q0540-motivation",
+    question: "What is/was the motivation for your micro frontend project?",
+    type: "choices",
+    min: 0,
+    max: 4,
+    options: [
+      "Developing a new solution",
+      "Rewrite of an existing monolithic application",
+      "Extension of an existing application",
+      "Other",
+    ],
+    extendOn: "Other",
+    section: "arch",
+  },
+];
+
 const backgroundQuestions: Array<Question> = [
   {
     id: "q0400-employees",
@@ -286,6 +357,23 @@ const backgroundQuestions: Array<Question> = [
     section: "background",
   },
   {
+    id: "q0421-team-composition",
+    question:
+      "What is your current / planned frontend development team structure?",
+    type: "choices",
+    min: 1,
+    max: 1,
+    options: [
+      "Single in-house team",
+      "Multiple in-house teams",
+      "Teams in different business departments",
+      "Teams in different geographic regions",
+      "Teams from different vendors",
+      "Open source / community contributions",
+    ],
+    section: "background",
+  },
+  {
     id: "q0430-framework",
     question:
       "Is there a single technology framework (e.g., React) or multiple?",
@@ -311,5 +399,6 @@ export const questions = [
   ...experienceQuestions,
   ...ecosystemQuestions,
   ...techQuestions,
+  ...archQuestions,
   ...backgroundQuestions,
 ];
