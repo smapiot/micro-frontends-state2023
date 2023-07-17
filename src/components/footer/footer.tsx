@@ -11,6 +11,8 @@ export default component$(() => {
         <Link href="/imprint">Imprint</Link>
         <span class={[styles.spacer, styles.sep]}>|</span>
         <Link href="/disclaimer">Disclaimer</Link>
+        <span class={[styles.spacer, styles.sep]}>|</span>
+        <Link href="/privacy">Privacy</Link>
       </div>
     </footer>
   );
