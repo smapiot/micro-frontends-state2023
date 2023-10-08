@@ -56,12 +56,12 @@ export default component$(() => {
 
       <div class="container container-center">
         <p class={styles.paragraph}>
-          You can stop and continue the survey any time. The survey is open in
-          July 2023.
+          You can stop and continue the survey any time. The survey is open from
+          July to start of October 2023.
         </p>
         <p class={styles.paragraph}>
           We'll publish the results on this page after the survey has concluded.
-          Just check back here in August to see the results. We'll also write a
+          Just check back here in October to see the results. We'll also write a
           short blog post about the results.
         </p>
       </div>
