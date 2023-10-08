@@ -13,6 +13,8 @@ import {
 import Choices from "~/components/input/choices";
 import Linear from "~/components/input/linear";
 import Text from "~/components/input/text";
+
+import { surveyActive } from "~/constants";
 import { questions } from "~/data";
 import { getQuestionResponse, setQuestionResponse } from "~/db";
 import { getUser, isLoggedIn } from "~/helpers";
@@ -104,6 +106,8 @@ export const useStoreAnswerAction = routeAction$(
 export const onRequest: RequestHandler = async ({ redirect, request }) => {
   if (!isLoggedIn(request)) {
     throw redirect(308, "/login");
+  } else if (!surveyActive) {
+    throw redirect(308, "/results");
   }
 };
 

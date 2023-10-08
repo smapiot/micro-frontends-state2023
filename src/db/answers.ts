@@ -1,4 +1,4 @@
-import { TableQuery } from "azure-storage";
+import { TableQuery, type TableService } from "azure-storage";
 import { eg, getTableService } from "./common";
 import { setRegisteredUser } from "./users";
 
@@ -48,4 +48,35 @@ export function getQuestionResponse(user: string, question: string) {
       }
     });
   });
+}
+
+async function queryAll<T>(
+  ts: TableService,
+  q: TableQuery,
+  select: (item: any) => T
+) {
+  const items: Array<T> = [];
+  let continuationToken = undefined;
+
+  do {
+    await new Promise<void>((resolve, reject) => {
+      ts.queryEntities(tableName, q, continuationToken!, (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          items.push(...result.entries.map(select));
+          continuationToken = result.continuationToken;
+          resolve();
+        }
+      });
+    });
+  } while (continuationToken);
+
+  return items;
+}
+
+export function getAnswers(question: string) {
+  const q = new TableQuery().where(`PartitionKey eq ?`, question);
+  const ts = getTableService();
+  return queryAll<string>(ts, q, (e: any) => e.Answer._);
 }

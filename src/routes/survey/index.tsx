@@ -1,6 +1,7 @@
 import { component$ } from "@builder.io/qwik";
 import { Link, type RequestHandler } from "@builder.io/qwik-city";
 
+import { surveyActive } from "~/constants";
 import { questions, sections } from "~/data";
 import { isLoggedIn } from "~/helpers";
 
@@ -12,6 +13,8 @@ const numCount = ~~(questions.length / sections.length);
 export const onRequest: RequestHandler = async ({ redirect, request }) => {
   if (!isLoggedIn(request)) {
     throw redirect(308, "/login");
+  } else if (!surveyActive) {
+    throw redirect(308, "/results");
   }
 };
 
