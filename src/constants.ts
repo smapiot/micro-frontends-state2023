@@ -1,1 +1,1 @@
-export const surveyActive = false;
+export const surveyActive = true;
