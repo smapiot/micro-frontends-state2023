@@ -3,6 +3,7 @@ import type { RequestHandler } from "@builder.io/qwik-city";
 import { useLocation, Link, routeLoader$ } from "@builder.io/qwik-city";
 
 import BarChart from "~/components/charts/BarChart";
+import PieChart from "~/components/charts/PieChart";
 
 import { surveyActive } from "~/constants";
 import { questions } from "~/data";
@@ -24,6 +25,16 @@ export const useAnswers = routeLoader$(async ({ params }) => {
   if (question) {
     const answers = await getAnswers(question.id);
     const groups = new Map<string, number>();
+
+    if (question.type === 'linear') {
+      for (let i = question.min; i <= question.max; i++) {
+        groups.set(`${i}`, 0);
+      }
+    } else if (question.type === 'choices') {
+      for (const option of question.options) {
+        groups.set(option, 0);
+      }
+    }
 
     for (const answer of answers) {
       const count = groups.get(answer);
@@ -84,12 +95,34 @@ export default component$(() => {
       </div>
 
       <div class="container container-center">
-        <BarChart
-          key={question.id}
-          title="# responses"
-          data={answers.value?.data ?? []}
-          labels={answers.value?.labels ?? []}
-        />
+        {question.type === "text" ? (
+          <div>
+            {answers.value?.labels.map((label, i) => (
+              <p key={i}>{label}</p>
+            ))}
+          </div>
+        ) : question.type === "linear" ? (
+          <BarChart
+            key={question.id}
+            title="# responses"
+            data={answers.value?.data ?? []}
+            labels={answers.value?.labels ?? []}
+          />
+        ) : question.min === 1 && question.max === 1 ? (
+          <PieChart
+            key={question.id}
+            title="# responses"
+            data={answers.value?.data ?? []}
+            labels={answers.value?.labels ?? []}
+          />
+        ) : (
+          <BarChart
+            key={question.id}
+            title="# responses"
+            data={answers.value?.data ?? []}
+            labels={answers.value?.labels ?? []}
+          />
+        )}
       </div>
 
       <div class="container container-center">
