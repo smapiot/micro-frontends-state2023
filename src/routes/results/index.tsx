@@ -22,7 +22,7 @@ export default component$(() => {
         <h1>
           Micro Frontends
           <br />
-          <span class="highlight">Survey</span> 2023
+          <span class="highlight">State in 2023</span>
         </h1>
       </div>
 
@@ -30,8 +30,21 @@ export default component$(() => {
 
       <div class="container container-center">
         <Link href={`/results/${firstQuestion.id}`} class="button">
-          See the answers! 🕹
+          Discover the answers! 🧠
         </Link>
+      </div>
+
+      <div class="container container-center">
+        <details>
+          <summary>List of questions</summary>
+          <ol style="text-align: left">
+            {questions.map((q) => (
+              <li key={q.id} style="margin: 1rem">
+                <Link href={`/results/${q.id}`}>{q.question}</Link>
+              </li>
+            ))}
+          </ol>
+        </details>
       </div>
     </>
   );

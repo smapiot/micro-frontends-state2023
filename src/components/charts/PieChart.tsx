@@ -1,6 +1,7 @@
 import type { Component } from "@builder.io/qwik";
 import { component$, useSignal, useVisibleTask$ } from "@builder.io/qwik";
 import { Chart, registerables } from "chart.js";
+import { backgroundColor, borderColor } from "./colors";
 
 const PieChart: Component<{
   title: string;
@@ -12,6 +13,7 @@ const PieChart: Component<{
   useVisibleTask$(() => {
     if (myChart?.value) {
       Chart.register(...registerables);
+      Chart.defaults.color = "#fff";
       new Chart(myChart.value, {
         type: "doughnut",
         data: {
@@ -20,6 +22,9 @@ const PieChart: Component<{
             {
               label: title,
               data,
+              backgroundColor,
+              borderColor,
+              borderWidth: 1,
             },
           ],
         },
@@ -27,7 +32,11 @@ const PieChart: Component<{
     }
   });
 
-  return <canvas ref={myChart} />;
+  return (
+    <div style="margin: auto; max-width: 600px; padding: 0 2rem;">
+      <canvas ref={myChart} />
+    </div>
+  );
 });
 
 export default PieChart;

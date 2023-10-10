@@ -25,30 +25,69 @@ export const useAnswers = routeLoader$(async ({ params }) => {
   if (question) {
     const answers = await getAnswers(question.id);
     const groups = new Map<string, number>();
+    const labels: Array<string> = [];
 
-    if (question.type === 'linear') {
+    if (question.type === "linear") {
       for (let i = question.min; i <= question.max; i++) {
+        if (i === question.min) {
+          labels.push(question.minLabel);
+        } else if (i === question.max) {
+          labels.push(question.maxLabel);
+        } else {
+          labels.push('');
+        }
+
         groups.set(`${i}`, 0);
       }
-    } else if (question.type === 'choices') {
+
+      for (const answer of answers) {
+        const count = groups.get(answer);
+
+        if (count) {
+          groups.set(answer, count + 1);
+        } else {
+          groups.set(answer, 1);
+        }
+      }
+    } else if (question.type === "choices") {
       for (const option of question.options) {
         groups.set(option, 0);
       }
-    }
 
-    for (const answer of answers) {
-      const count = groups.get(answer);
+      for (const answer of answers) {
+        const values = JSON.parse(answer || "[]") as Array<string>;
 
-      if (count) {
-        groups.set(answer, count + 1);
-      } else {
-        groups.set(answer, 1);
+        for (const value of values) {
+          if (value) {
+            const count = groups.get(value);
+  
+            if (count) {
+              groups.set(value, count + 1);
+            } else {
+              groups.set(value, 1);
+            }
+          }
+        }
+      }
+      
+      labels.push(...groups.keys());
+    } else {
+      const sep = question.sep || "\n\n";
+
+      for (const answer of answers) {
+        const values = answer.split(sep).filter(Boolean);
+
+        for (const value of values) {
+          if (!labels.includes(value)) {
+            labels.push(value);
+          }
+        }
       }
     }
 
     return {
       count: answers.length,
-      labels: [...groups.keys()],
+      labels,
       data: [...groups.values()],
     };
   }
@@ -73,6 +112,8 @@ export default component$(() => {
     );
   }
 
+  const first = questions[0];
+  const last = questions[questions.length - 1];
   const previous = questions[index - 1];
   const next = questions[index + 1];
   const question = questions[index];
@@ -96,29 +137,29 @@ export default component$(() => {
 
       <div class="container container-center">
         {question.type === "text" ? (
-          <div>
+          <ul style="display: flex; flex-wrap: wrap; gap: 1rem; list-style: none; max-width: 1200px; margin: auto">
             {answers.value?.labels.map((label, i) => (
-              <p key={i}>{label}</p>
+              <li key={i} style="margin: 0; padding: 0.3rem 0.6rem; background: #000; border-radius: 7px;">{label}</li>
             ))}
-          </div>
+          </ul>
         ) : question.type === "linear" ? (
           <BarChart
             key={question.id}
-            title="# responses"
+            title="count"
             data={answers.value?.data ?? []}
             labels={answers.value?.labels ?? []}
           />
         ) : question.min === 1 && question.max === 1 ? (
           <PieChart
             key={question.id}
-            title="# responses"
+            title="count"
             data={answers.value?.data ?? []}
             labels={answers.value?.labels ?? []}
           />
         ) : (
           <BarChart
             key={question.id}
-            title="# responses"
+            title="count"
             data={answers.value?.data ?? []}
             labels={answers.value?.labels ?? []}
           />
@@ -127,14 +168,28 @@ export default component$(() => {
 
       <div class="container container-center">
         <div class="button-row">
-          {previous && (
+          {previous ? (
             <Link class="button button-dark" href={`/results/${previous.id}`}>
               ⬅️ Previous
             </Link>
+          ) : (
+            <Link class="button button-dark" href={`/results/${last.id}`}>
+              ↪️ Last
+            </Link>
           )}
-          {next && (
+          <Link class="button button-dark" href={`/results`}>
+              Home
+            </Link>
+          {next ? (
             <Link class="button button-dark" href={`/results/${next.id}`}>
               Next ➡️
+            </Link>
+          ) : (
+            <Link
+              class="button button-dark"
+              href={`/results/${first.id}`}
+            >
+              First ↩️
             </Link>
           )}
         </div>

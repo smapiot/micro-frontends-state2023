@@ -17,6 +17,7 @@ export interface TextQuestion extends BasicQuestion {
   hint: string;
   minLength: number;
   maxLength: number;
+  sep?: string;
 }
 
 export interface ChoicesQuestion extends BasicQuestion {
@@ -47,6 +48,7 @@ const basicsQuestions: Array<Question> = [
     hint: "List as many as you want. Separate by comma.",
     type: "text",
     section: "basics",
+    sep: ',',
     minLength: 0,
     maxLength: 1024,
   },

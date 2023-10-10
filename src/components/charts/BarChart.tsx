@@ -1,6 +1,7 @@
 import type { Component } from "@builder.io/qwik";
 import { component$, useSignal, useVisibleTask$ } from "@builder.io/qwik";
 import { Chart, registerables } from "chart.js";
+import { backgroundColor, borderColor } from "./colors";
 
 const BarChart: Component<{
   title: string;
@@ -12,6 +13,7 @@ const BarChart: Component<{
   useVisibleTask$(() => {
     if (myChart?.value) {
       Chart.register(...registerables);
+      Chart.defaults.color = "#fff";
       new Chart(myChart.value, {
         type: "bar",
         data: {
@@ -20,10 +22,19 @@ const BarChart: Component<{
             {
               label: title,
               data,
+              backgroundColor,
+              borderColor,
+              borderWidth: 1,
             },
           ],
         },
         options: {
+          indexAxis: labels.length > 5 ? "y" : "x",
+          plugins: {
+            legend: {
+              display: false,
+            },
+          },
           scales: {
             y: {
               beginAtZero: true,
@@ -34,7 +45,11 @@ const BarChart: Component<{
     }
   });
 
-  return <canvas ref={myChart} />;
+  return (
+    <div style={`margin: auto; max-width: 800px; padding: 0 2rem;`}>
+      <canvas ref={myChart} />
+    </div>
+  );
 });
 
 export default BarChart;
